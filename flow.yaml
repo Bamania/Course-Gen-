@@ -24,8 +24,8 @@ inputs:
 
 # LLM configuration
 model:
-  provider: "anthropic" # e.g., anthropic, openai, meta, etc.
-  name: "claude-3.5-sonnet"
+  provider: "openai" # e.g., anthropic, openai, meta, etc.
+  name: "gpt-4o"
 
 # For supported LLM models, refer to the documentation: https://docs.mira.network/sdk/core-concepts
 
