@@ -1,9 +1,20 @@
 // server.js
-const express = require('express');
-const { spawn } = require('child_process');
+import express from "express";
+import cors from "cors";
+import { spawn } from "child_process";
+import router from "./auth.js";
 
 const app = express();
 const port = 5000;
+
+// Enable CORS
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Replace with your frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+    credentials: true, // Allow cookies or other credentials
+  })
+);
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -31,6 +42,9 @@ app.get('/', (req, res) => {
     res.status(500).json({ success: false, error: 'Failed to execute code' });
   }
 });
+
+// Authentication Routes
+app.use("/api/auth", router);
 
 // Start the server
 app.listen(port, () => {
