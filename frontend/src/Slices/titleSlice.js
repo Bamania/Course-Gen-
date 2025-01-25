@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const aiGeneratedTitleInitialState = {
     aiGeneratedTitle: ["title1", "title2"],
-    ParsedGeneratedTitle: [] 
+    ParsedGeneratedTitle: [],
+    selectedTitle: "" // Add selectedTitle to the initial state
 };
 
 const TitleSlice = createSlice({
@@ -16,10 +17,14 @@ const TitleSlice = createSlice({
     parseTitle: (state, action) => {
         // Replace the ParsedGeneratedTitle array with the new parsed array
         state.ParsedGeneratedTitle = action.payload;
+    },
+    setSelectedTitle: (state, action) => {
+        // Update the selectedTitle with the new value
+        state.selectedTitle = action.payload;
     }
   },
 });
 
-export const { SaveTitle, parseTitle } = TitleSlice.actions;
+export const { SaveTitle, parseTitle, setSelectedTitle } = TitleSlice.actions;
 
 export default TitleSlice.reducer;

@@ -19,19 +19,19 @@ app.use(
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-app.get('/', (req, res) => {
+app.get('/course', (req, res) => {
   try {
-    const topic = "hard life";
-    const style = "lil wayne";
+    const title = req.query.title;
+    console.log("title from the frontend for course:", title);
 
-    if (!topic || !style) {
-      return res.status(400).json({ success: false, error: 'Missing topic or style in request body' });
+    if (!title) {
+      return res.status(400).json({ success: false, error: 'Missing title ' });
     }
 
     let data1 = '';
     let error1 = '';
 
-    const pythonProcess = spawn('python', ['rapSong-test-local.py', topic, style]);
+    const pythonProcess = spawn('python', ['rapSong-test-local.py', title]);
 
     pythonProcess.stdout.on('data', (data) => {
       data1 += data.toString();
@@ -44,9 +44,10 @@ app.get('/', (req, res) => {
     pythonProcess.on('close', (code) => {
       console.log(`Child process exited with code ${code}`);
       if (code !== 0) {
+        console.error('Error from Python script:', error1);
         return res.status(500).json({ success: false, error: error1 });
       }
-
+      console.log("Data Sent to Frontend from Flow.yaml ", data1);
       res.json({ success: true, result: data1 });
     });
   } catch (error) {
