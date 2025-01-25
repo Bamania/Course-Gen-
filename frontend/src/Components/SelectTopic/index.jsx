@@ -30,6 +30,9 @@ export default function SelectTopic() {
         jsonString = `{ "result": "${jsonString}" }`;
       }
 
+      // Fix missing commas between properties
+      jsonString = jsonString.replace(/}\s*{/g, '},{');
+
       // Parse the JSON string into an object
       const data = JSON.parse(jsonString);
 
@@ -41,8 +44,8 @@ export default function SelectTopic() {
 
       // Remove any empty strings from the array (in case of extra newlines) and trim whitespace
       const cleanedArray = resultArray
-          .map(item => item.trim()) // Trim whitespace
-          .filter(item => item.length > 0); // Remove empty strings
+        .map(item => item.trim()) // Trim whitespace
+        .filter(item => item.length > 0); // Remove empty strings
 
       return cleanedArray;
     } catch (error) {

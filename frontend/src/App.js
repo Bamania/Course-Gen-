@@ -45,7 +45,7 @@ function App() {
         />
         <Route path="/" element={<Dashboard />} />
         <Route path="/selectTopic" element={<SelectTopic />} />
-        <Route path="/displayCourse" element={<DisplayCourse />} />
+        <Route path="/display" element={<DisplayCourse />} />
         <Route path="/course" element={<CourseData />} />
         <Route
           path="/signup"

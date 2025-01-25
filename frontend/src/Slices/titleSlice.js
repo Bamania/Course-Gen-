@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const aiGeneratedTitleInitialState = {
     aiGeneratedTitle: ["title1", "title2"],
     ParsedGeneratedTitle: [],
-    selectedTitle: "" // Add selectedTitle to the initial state
+    selectedTitle: "" 
 };
 
 const TitleSlice = createSlice({

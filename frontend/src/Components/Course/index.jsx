@@ -6,7 +6,8 @@ import { SaveCourse } from '../../Slices/course.slice';
 import { useNavigate } from 'react-router-dom';
 
 function CourseData() {
-    const [courseContent, setCourseContent] = useState();
+   
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const CourseStorage = useSelector((state) => state.COURSE_STORAGE);
@@ -14,7 +15,9 @@ function CourseData() {
     const title = TitleStorage.selectedTitle;
     const backend_url = "http://localhost:5000/course";
 
+ 
     const handleGenerateCourse = async () => {
+        setLoading(true);
         try {
             const headers = {
                 'Content-Type': 'application/json',
@@ -23,13 +26,17 @@ function CourseData() {
                 params: { title: title },
                 headers,
             });
-        dispatch(SaveCourse(response.data.data.result));
-            navigate("/display")
+            console.log("Response received:", response.data);
+             dispatch(SaveCourse(response.data.result));
+            console.log("Course saved, navigating to /display");
+            navigate("/display");
         } catch (error) {
             console.error("Error fetching course data:", error);
+        } finally {
+            setLoading(false);
         }
     };
-
+    
 
     const courseData = {
         title: "Advanced Machine Learning with Python",

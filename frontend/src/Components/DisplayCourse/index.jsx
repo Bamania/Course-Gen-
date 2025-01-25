@@ -1,32 +1,138 @@
 import React from 'react';
 import { BookOpen, Clock, Globe, GraduationCap, Star, Users } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { Saveassignments, Savechapter, Savedescriptions, Saveresources } from '../../Slices/course.slice';
 
 function DisplayCourse() {
-const CourseContent=useSelector((state)=>state.COURSE_STORAGE)
+  const CourseContent = useSelector((state) => state.COURSE_STORAGE);
 
-console.log("Course Content", CourseContent.aiGeneratedCourse);
+  console.log("Course Content", CourseContent);
+  const dispatch = useDispatch();
+
+  function parseCourseData(input) {
+    if (!input || typeof input !== 'string') {
+      return {
+        courseTitle: [],
+        courseDescription: [],
+        chapters: [],
+        descriptions: [],
+        resources: [],
+        assignments: []
+      };
+    }
+
+    // Extract the relevant part of the string
+    const dataPart = input.split("{'result': '");
+    if (dataPart.length < 2) {
+      return {
+        courseTitle: [],
+        courseDescription: [],
+        chapters: [],
+        descriptions: [],
+        resources: [],
+        assignments: []
+      };
+    }
+    const data = dataPart[1].split("'}")[0];
+
+    // Split the data into lines
+    const lines = data.split('\n');
+
+    // Initialize arrays
+    const courseTitle = [];
+    const courseDescription = [];
+    const chapters = [];
+    const descriptions = [];
+    const resources = [];
+    const assignments = [];
+
+    // Extract course title and description (first two sentences)
+    const sentences = data.match(/[^.!?]+[.!?]+/g);
+    if (sentences && sentences.length >= 2) {
+      courseTitle.push(sentences[0].trim());
+      courseDescription.push(sentences[1].trim());
+    }
+
+    // Process each chapter
+    const chapterSections = data.split('---');
+    chapterSections.forEach(section => {
+      if (section.includes('*Chapter')) {
+        // Extract chapter title
+        const chapterTitleMatch = section.match(/\*Chapter \d+: (.+)/);
+        const chapterTitle = chapterTitleMatch ? chapterTitleMatch[1] : 'Untitled Chapter';
+        chapters.push(chapterTitle);
+
+        // Extract chapter description
+        const chapterDescriptionMatch = section.match(/\*Description: (.+)/);
+        const chapterDescription = chapterDescriptionMatch ? chapterDescriptionMatch[1] : 'No description available';
+        descriptions.push(chapterDescription);
+
+        // Extract resources
+        const resourceLines = section.split('*Resources:')[1]?.split('*Assignment:')[0]?.trim() || 'No resources available';
+        resources.push(resourceLines);
+
+        // Extract assignment
+        const assignment = section.split('*Assignment:')[1]?.split('---')[0]?.trim() || 'No assignment available';
+        assignments.push(assignment);
+      }
+    });
+
+    return {
+      courseTitle,
+      courseDescription,
+      chapters,
+      descriptions,
+      resources,
+      assignments
+    };
+  }
+
+  // Sample input
+
+  // Parse the input
+  const result = parseCourseData(CourseContent[2]);
+  dispatch(Savechapter(result.chapters));
+  dispatch(Savedescriptions(result.descriptions));
+  dispatch(Saveresources(result.resources));
+  dispatch(Saveassignments(result.assignments));
+
+  console.log("after dispatch state !", CourseContent);
+
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <div className="relative h-[300px]">
-        <img 
-          src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80"
-          alt="Course banner"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="absolute inset-0 flex items-center">
-          <div className="container mx-auto px-4">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Advanced Web Development
-            </h1>
-            <p className="text-xl text-gray-200 max-w-2xl">
-              Master modern web technologies and build professional applications
-            </p>
+      {CourseContent.ParsedChapters((item,index) => {
+        return (
+          <div key={index} className="border-b border-gray-200 py-4">
+            <div className="flex items-center gap-4">
+              <div>
+              <h1>Chapters</h1>
+              <span>{item}</span>
+              </div>
+              <div>
+              <h3>
+                descriptions
+              </h3>
+              <span>{CourseContent.ParsedDescriptions[index]}</span>
+              </div>
+              <div>
+              <h3>
+                resources link
+              </h3>
+              <span>{CourseContent.ParsedResources[index]}</span>
+              </div>
+<div>
+              <h4>
+                asssignments
+              </h4>
+              <span>{CourseContent.ParsedAssignments[index]}</span>
+              </div>
+            </div>
           </div>
-        </div>
+        )
+      })}
       </div>
 
       {/* Course Info */}

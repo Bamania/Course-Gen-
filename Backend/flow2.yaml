@@ -30,7 +30,7 @@ model:
 
 # Prompt template configuration
 prompt: |
- generate me 5 titles for  {topic} as if it is going to be use in some pdf and generate it such way that the final result has only topics separeted by each line ! and no else text in the result
+ generate me 5 titles for {topic} as if it is going to be use in some pdf and generate it such way that the final result has only topics separeted by each line ! and no else text in the result
 
 # ReadME configuration
 readme: |
