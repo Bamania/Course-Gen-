@@ -86,73 +86,7 @@ function CourseData() {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
-            <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-                <div className="container mx-auto px-4 py-12">
-                    <div className="max-w-4xl">
-                        <h1 className="text-4xl font-bold mb-4">{courseData.title}</h1>
-                        <p className="text-lg mb-6 text-blue-100">{courseData.description}</p>
-                        <div className="flex flex-wrap gap-6 text-sm">
-                            <div className="flex items-center">
-                                <Clock className="w-5 h-5 mr-2" />
-                                {courseData.duration}
-                            </div>
-                            <div className="flex items-center">
-                                <BookOpen className="w-5 h-5 mr-2" />
-                                {courseData.totalModules} modules
-                            </div>
-                            <div className="flex items-center">
-                                <Award className="w-5 h-5 mr-2" />
-                                {courseData.level}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="container mx-auto px-4 py-12">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Course Progress */}
-                    <div className="lg:col-span-2">
-                        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-                            <h2 className="text-2xl font-semibold mb-4">Course Progress</h2>
-                            <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-                                <div 
-                                    className="bg-blue-600 h-2.5 rounded-full" 
-                                    style={{ width: `${courseData.progress}%` }}
-                                ></div>
-                            </div>
-                            <p className="text-gray-600">{courseData.progress}% Complete</p>
-                        </div>
-
-                        {/* Course Modules */}
-                        <div className="space-y-4">
-                            {courseData.modules.map((module) => (
-                                <div key={module.id} className="bg-white rounded-xl shadow-sm p-6">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <div className="flex items-center">
-                                            {module.completed ? (
-                                                <CheckCircle2 className="w-6 h-6 text-green-500 mr-3" />
-                                            ) : (
-                                                <PlayCircle className="w-6 h-6 text-blue-500 mr-3" />
-                                            )}
-                                            <h3 className="text-xl font-semibold">{module.title}</h3>
-                                        </div>
-                                        <span className="text-gray-500 text-sm">{module.duration}</span>
-                                    </div>
-                                    <ul className="space-y-3 ml-9">
-                                        {module.lessons.map((lesson, index) => (
-                                            <li key={index} className="flex items-center text-gray-700">
-                                                <ChevronRight className="w-4 h-4 mr-2 text-gray-400" />
-                                                {lesson}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
+          
                     {/* Sidebar */}
                     <div className="lg:col-span-1">
                         <div className="bg-white rounded-xl shadow-sm p-6 sticky top-4">
@@ -171,8 +105,7 @@ function CourseData() {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+          
     );
 }
 
