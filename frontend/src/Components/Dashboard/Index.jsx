@@ -13,6 +13,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { SaveTitle } from "../../Slices/titleSlice";
+import SelectTopic from "../SelectTopic";
 
   export const Dashboard = () => {
     const dispatch = useDispatch();
@@ -38,8 +39,9 @@ const handleGenerateCourse = async () => {
       });
       console.log(response.data);
       setGeneratedTopic(response.data);
-      dispatch(SaveTitle(response.data));
+      dispatch(SaveTitle(response.data.result.titles));
       navigate("/selectTopic");
+   
     } catch (error) {
       console.error("Error generating course:", error.response?.data || error.message);
       alert("Failed to generate course. Please try again.");

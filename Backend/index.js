@@ -1,13 +1,16 @@
 // server.js
-import express from "express";
+import express, { response } from "express";
+import { Mistral } from '@mistralai/mistralai';
 import cors from "cors";
-import { spawn } from "child_process";
-import router from "./auth.js";
+
 
 const app = express();
 const port = 5000;
-
 // Enable CORS
+
+const apiKey = "q5BYnQbXekX5O10x53NDYfkbJO0nx9mU";
+const client = new Mistral({ apiKey: apiKey });
+
 app.use(
   cors({
     origin: "http://localhost:3000", // Replace with your frontend URL
@@ -19,81 +22,55 @@ app.use(
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-app.get('/course', (req, res) => {
+async function genTitle(title) {
+  try {
+    const chatResponse = await client.chat.complete({
+      model: "mistral-large-latest",
+      messages: [
+        {
+          role: "user",
+          content: `Generate me 5 titles for ${title} in the following JSON format: 
+          { "titles": ["title1", "title2", "title3", "title4", "title5"] }`,
+        },
+      ],
+      responseFormat: { type: "json_object" }
+    });
+
+    const responseContent = chatResponse.choices?.[0].message.content;
+    console.log("type of the response content",typeof(responseContent));
+    console.log("from gen ai title", responseContent);
+  
+    return JSON.parse(responseContent); // Parse the response content
+  } catch (error) {
+    console.error("Error with Mistral API:", error);
+    throw new Error("Mistral API request failed");
+  }
+}
+
+app.get("/title", async (req, res) => {
   try {
     const title = req.query.title;
     console.log("title from the frontend for course:", title);
 
     if (!title) {
-      return res.status(400).json({ success: false, error: 'Missing title ' });
+      return res.status(400).json({ success: false, error: "Missing title" });
     }
 
-    let data1 = '';
-    let error1 = '';
+    
+    const response  = await genTitle(title);
+    console.log("data from genTitle function  ", response);
+    console.log("type of response  ", typeof(response));
 
-    const pythonProcess = spawn('python', ['rapSong-test-local.py', title]);
-
-    pythonProcess.stdout.on('data', (data) => {
-      data1 += data.toString();
-    });
-
-    pythonProcess.stderr.on('data', (data) => {
-      error1 += data.toString();
-    });
-
-    pythonProcess.on('close', (code) => {
-      console.log(`Child process exited with code ${code}`);
-      if (code !== 0) {
-        console.error('Error from Python script:', error1);
-        return res.status(500).json({ success: false, error: error1 });
-      }
-      console.log("Data Sent to Frontend from Flow.yaml ", data1);
-      res.json({ success: true, result: data1 });
-    });
+    res.json({ success: true, result: response });
   } catch (error) {
-    console.error('Error running code:', error);
-    res.status(500).json({ success: false, error: 'Failed to execute code' });
+    console.error("Error running code:", error);
+    res.status(500).json({ success: false, error: "Failed to execute code" });
   }
 });
 
-app.get('/title', (req, res) => {
-  try {
-    const topic = req.query.title;
-    console.log("Topic from the frontend:", topic);
-
-    if (!topic) {
-      return res.status(400).json({ success: false, error: 'Missing topic in request query' });
-    }
-
-    let data1 = '';
-    let error1 = '';
-
-    const pythonProcess = spawn('python', ['title_generate.py', topic]);
-
-    pythonProcess.stdout.on('data', (data) => {
-      data1 += data.toString();
-    });
-
-    pythonProcess.stderr.on('data', (data) => {
-      error1 += data.toString();
-    });
-
-    pythonProcess.on('close', (code) => {
-      console.log(`Child process exited with code ${code}`);
-      if (code !== 0) {
-        return res.status(500).json({ success: false, error: error1 });
-      }
-      console.log("Data Sent to Frontend",data1);
-      res.json({ success: true, result: data1 });
-    });
-  } catch (error) {
-    console.error('Error running code:', error);
-    res.status(500).json({ success: false, error: 'Failed to execute code' });
-  }
-});
 
 // Authentication Routes
-app.use("/api/auth", router);
+// app.use("/api/auth", router);
 
 // Start the server
 app.listen(port, () => {
