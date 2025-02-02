@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { BookOpen, Clock, Award, ChevronRight, PlayCircle, CheckCircle2 } from 'lucide-react';
 import axios from 'axios';
-import { SaveCourse } from '../../Slices/course.slice';
+import { SaveCourse ,Savechapter,Saveresources,Saveassignments,Savedescriptions} from '../../Slices/course.slice';
 import { useNavigate } from 'react-router-dom';
 
 function CourseData() {
@@ -23,13 +23,24 @@ function CourseData() {
                 'Content-Type': 'application/json',
             };
             const response = await axios.get(backend_url, {
-                params: { title: title },
+                params: { selectedTitle: title },
                 headers,
             });
             console.log("Response received:", response.data);
-             dispatch(SaveCourse(response.data.result));
-            console.log("Course saved, navigating to /display");
-            navigate("/display");
+            console.log(response.data.result);
+            console.log(response.data.result.result);
+            // console.log(response.data.result.result.result);
+            console.log(response.data.result.result.chapters);
+            dispatch(Savechapter(response.data.result.result.chapters));
+            dispatch(Saveresources(response.data.result.result.Resources));
+            dispatch(Savedescriptions(response.data.result.result.Description));
+            dispatch(Saveassignments(response.data.result.result.Assignment));
+        
+          
+            navigate("/display")
+            // console.log("Response received:", response.data);
+           
+            
         } catch (error) {
             console.error("Error fetching course data:", error);
         } finally {

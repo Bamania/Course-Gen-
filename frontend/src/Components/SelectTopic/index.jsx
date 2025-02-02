@@ -19,15 +19,7 @@ export default function SelectTopic() {
 
   const [aigeneratedTitle, setAigeneratedTitle] = useState([]);
 
-  // useEffect(async() => {
-  //   setAigeneratedTitle(TitleStorage.aiGeneratedTitle);
-
-  //   console.log("data from the redux in a parsed format", TitleStorage.ParsedGeneratedTitle);
-  //   if (TitleStorage.aiGeneratedTitle.length > 2) {
-  //     dispatch(TitleStorage.aiGeneratedTitle);
-  //   }
-  //   setDatarec(true); // Mark data as received
-  // }, []);
+  
 
   const handleTitleSelection = (title) => {
     setLocalSelectedTitle(title);

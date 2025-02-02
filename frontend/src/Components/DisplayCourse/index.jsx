@@ -1,190 +1,78 @@
 import React from 'react';
-import { BookOpen, Clock, Globe, GraduationCap, Star, Users } from 'lucide-react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Saveassignments, Savechapter, Savedescriptions, Saveresources } from '../../Slices/course.slice';
+import { BookOpen, Clock, Globe, GraduationCap, Star, Users, Video, FileText, PenTool } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 function DisplayCourse() {
   const CourseContent = useSelector((state) => state.COURSE_STORAGE);
-
-  console.log("Course Content", CourseContent);
-  const dispatch = useDispatch();
-
-  function parseCourseData(input) {
-    if (!input || typeof input !== 'string') {
-      return {
-        courseTitle: [],
-        courseDescription: [],
-        chapters: [],
-        descriptions: [],
-        resources: [],
-        assignments: []
-      };
-    }
-
-    // Extract the relevant part of the string
-    const dataPart = input.split("{'result': '");
-    if (dataPart.length < 2) {
-      return {
-        courseTitle: [],
-        courseDescription: [],
-        chapters: [],
-        descriptions: [],
-        resources: [],
-        assignments: []
-      };
-    }
-    const data = dataPart[1].split("'}")[0];
-
-    // Split the data into lines
-    const lines = data.split('\n');
-
-    // Initialize arrays
-    const courseTitle = [];
-    const courseDescription = [];
-    const chapters = [];
-    const descriptions = [];
-    const resources = [];
-    const assignments = [];
-
-    // Extract course title and description (first two sentences)
-    const sentences = data.match(/[^.!?]+[.!?]+/g);
-    if (sentences && sentences.length >= 2) {
-      courseTitle.push(sentences[0].trim());
-      courseDescription.push(sentences[1].trim());
-    }
-
-    // Process each chapter
-    const chapterSections = data.split('---');
-    chapterSections.forEach(section => {
-      if (section.includes('*Chapter')) {
-        // Extract chapter title
-        const chapterTitleMatch = section.match(/\*Chapter \d+: (.+)/);
-        const chapterTitle = chapterTitleMatch ? chapterTitleMatch[1] : 'Untitled Chapter';
-        chapters.push(chapterTitle);
-
-        // Extract chapter description
-        const chapterDescriptionMatch = section.match(/\*Description: (.+)/);
-        const chapterDescription = chapterDescriptionMatch ? chapterDescriptionMatch[1] : 'No description available';
-        descriptions.push(chapterDescription);
-
-        // Extract resources
-        const resourceLines = section.split('*Resources:')[1]?.split('*Assignment:')[0]?.trim() || 'No resources available';
-        resources.push(resourceLines);
-
-        // Extract assignment
-        const assignment = section.split('*Assignment:')[1]?.split('---')[0]?.trim() || 'No assignment available';
-        assignments.push(assignment);
-      }
-    });
-
-    return {
-      courseTitle,
-      courseDescription,
-      chapters,
-      descriptions,
-      resources,
-      assignments
-    };
-  }
-
-  // Sample input
-
-  // Parse the input
-  const result = parseCourseData(CourseContent[2]);
-  dispatch(Savechapter(result.chapters));
-  dispatch(Savedescriptions(result.descriptions));
-  dispatch(Saveresources(result.resources));
-  dispatch(Saveassignments(result.assignments));
-
-  console.log("after dispatch state !", CourseContent);
-
-
+console.log("reduxStore", CourseContent)
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="relative h-[300px]">
-      {CourseContent.ParsedChapters((item,index) => {
-        return (
-          <div key={index} className="border-b border-gray-200 py-4">
-            <div className="flex items-center gap-4">
-              <div>
-              <h1>Chapters</h1>
-              <span>{item}</span>
-              </div>
-              <div>
-              <h3>
-                descriptions
-              </h3>
-              <span>{CourseContent.ParsedDescriptions[index]}</span>
-              </div>
-              <div>
-              <h3>
-                resources link
-              </h3>
-              <span>{CourseContent.ParsedResources[index]}</span>
-              </div>
-<div>
-              <h4>
-                asssignments
-              </h4>
-              <span>{CourseContent.ParsedAssignments[index]}</span>
-              </div>
-            </div>
-          </div>
-        )
-      })}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+        <div className="container mx-auto px-4">
+          <h1 className="text-4xl font-bold mb-4">Web Development Masterclass</h1>
+          <p className="text-xl opacity-90">Master modern web development from ground up</p>
+        </div>
       </div>
 
-      {/* Course Info */}
-      <div className="container mx-auto px-4 py-8">
+      {/* Course Content */}
+      <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="md:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <h2 className="text-2xl font-bold mb-4">About This Course</h2>
-              <p className="text-gray-600 mb-6">
-                This comprehensive course covers everything you need to know about modern web development.
-                From frontend frameworks to backend architecture, you'll learn the skills needed to build
-                professional, scalable web applications.
-              </p>
+            <h2 className="text-2xl font-bold mb-6">Course Content</h2>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-blue-600" />
-                  <span>12 weeks</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Users className="w-5 h-5 text-blue-600" />
-                  <span>2,500+ students</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Globe className="w-5 h-5 text-blue-600" />
-                  <span>100% online</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Curriculum */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h2 className="text-2xl font-bold mb-6">Curriculum</h2>
-              <div className="space-y-4">
-                {[
-                  "Introduction to Web Development",
-                  "HTML5 & CSS3 Fundamentals",
-                  "JavaScript Programming",
-                  "React.js Framework",
-                  "Backend Development with Node.js",
-                  "Database Design & Implementation",
-                  "API Development",
-                  "Deployment & DevOps",
-                ].map((module, index) => (
-                  <div key={index} className="flex items-center gap-3 p-4 border rounded-lg hover:bg-gray-50">
-                    <BookOpen className="w-5 h-5 text-blue-600" />
-                    <span className="font-medium">Module {index + 1}: {module}</span>
+            {CourseContent.ParsedChapters.map((chapter, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden">
+                {/* Chapter Header */}
+                <div className="border-b border-gray-100 bg-blue-50 p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold">
+                      {index + 1}
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-800">{chapter}</h3>
                   </div>
-                ))}
+                </div>
+
+                {/* Chapter Content */}
+                <div className="p-6 space-y-6">
+                  {/* Description */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-500 uppercase mb-2">Description</h4>
+                    <p className="text-gray-700">{CourseContent.ParsedDescriptions[index]}</p>
+                  </div>
+
+                  {/* Resources */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-500 uppercase mb-3">Learning Resources</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {CourseContent.ParsedResources[index]?.map((resource, resIndex) => (
+                        <div key={resIndex} className="flex items-center gap-2 text-blue-600 hover:text-blue-700">
+                          {resource.type === 'video' ? <Video className="w-5 h-5" /> : <FileText className="w-5 h-5" />}
+                          <a href={resource.link} target="_blank" rel="noopener noreferrer" className="text-sm">
+                            {resource.title}
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Assignment */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-500 uppercase mb-2">Assignment</h4>
+                    <div className="flex items-start gap-3 bg-gray-50 p-4 rounded-lg">
+                      <PenTool className="w-5 h-5 text-blue-600 mt-1" />
+                      <div>
+                        <p className="text-gray-700">{CourseContent.ParsedAssignments[index]}</p>
+                        <button className="mt-2 text-sm text-blue-600 hover:text-blue-700 font-medium">
+                          Start Assignment →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
 
           {/* Sidebar */}
@@ -195,18 +83,41 @@ function DisplayCourse() {
                 <p className="text-gray-500">One-time payment</p>
               </div>
 
-              <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors mb-4">
+              <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors mb-6">
                 Enroll Now
               </button>
 
-              <div className="space-y-4 text-sm">
-                <div className="flex items-center gap-2">
-                  <Star className="w-4 h-4 text-yellow-400" />
-                  <span>4.9/5 course rating</span>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <Clock className="w-5 h-5 text-blue-600" />
+                  <div>
+                    <h4 className="font-medium">Course Duration</h4>
+                    <p className="text-sm text-gray-600">12 weeks</p>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <GraduationCap className="w-4 h-4 text-gray-600" />
-                  <span>Certificate of completion</span>
+
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <Users className="w-5 h-5 text-blue-600" />
+                  <div>
+                    <h4 className="font-medium">Enrolled Students</h4>
+                    <p className="text-sm text-gray-600">2,500+ students</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <Star className="w-5 h-5 text-yellow-400" />
+                  <div>
+                    <h4 className="font-medium">Course Rating</h4>
+                    <p className="text-sm text-gray-600">4.9/5 from 500+ reviews</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <GraduationCap className="w-5 h-5 text-blue-600" />
+                  <div>
+                    <h4 className="font-medium">Certificate</h4>
+                    <p className="text-sm text-gray-600">Certificate of completion</p>
+                  </div>
                 </div>
               </div>
             </div>
