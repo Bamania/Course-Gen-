@@ -4,7 +4,10 @@ import { useSelector } from 'react-redux';
 
 function DisplayCourse() {
   const CourseContent = useSelector((state) => state.COURSE_STORAGE);
-console.log("reduxStore", CourseContent)
+  console.log("chapters", CourseContent.ParsedChapters);
+  console.log("Descriptions:", CourseContent.ParsedDescriptions);
+console.log("Resources:", CourseContent.ParsedResources);
+console.log("Assignments:", CourseContent.ParsedAssignments);
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -22,7 +25,7 @@ console.log("reduxStore", CourseContent)
           <div className="md:col-span-2">
             <h2 className="text-2xl font-bold mb-6">Course Content</h2>
 
-            {CourseContent.ParsedChapters.map((chapter, index) => (
+            {CourseContent.ParsedChapters[0].map((chapter, index) => (
               <div key={index} className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden">
                 {/* Chapter Header */}
                 <div className="border-b border-gray-100 bg-blue-50 p-4">
@@ -39,7 +42,8 @@ console.log("reduxStore", CourseContent)
                   {/* Description */}
                   <div>
                     <h4 className="text-sm font-semibold text-gray-500 uppercase mb-2">Description</h4>
-                    <p className="text-gray-700">{CourseContent.ParsedDescriptions[index]}</p>
+                    <p className="text-gray-700"><p className="text-gray-700">{CourseContent.ParsedDescriptions[0][index]}</p></p>
+                    {/* <p className="text-gray-700">{CourseContent.ParsedDescriptions[0].length}</p> */}
                   </div>
 
                   {/* Resources */}
@@ -63,7 +67,7 @@ console.log("reduxStore", CourseContent)
                     <div className="flex items-start gap-3 bg-gray-50 p-4 rounded-lg">
                       <PenTool className="w-5 h-5 text-blue-600 mt-1" />
                       <div>
-                        <p className="text-gray-700">{CourseContent.ParsedAssignments[index]}</p>
+                        <p className="text-gray-700">{CourseContent.ParsedAssignments[0][index]}</p>
                         <button className="mt-2 text-sm text-blue-600 hover:text-blue-700 font-medium">
                           Start Assignment →
                         </button>
@@ -113,7 +117,15 @@ console.log("reduxStore", CourseContent)
                 </div>
 
                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <GraduationCap className="w-5 h-5 text-blue-600" />
+                  
+                {/* {CourseContent.ParsedDescriptions[0].map((description, index) => (
+      <div key={index} className="hidden md:block bg-gray-200 py-16 px-4">
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-bold mb-6">Course Description</h2>
+          <p className="text-gray-700">{description}</p>
+        </div>
+      </div>
+    ))} */}
                   <div>
                     <h4 className="font-medium">Certificate</h4>
                     <p className="text-sm text-gray-600">Certificate of completion</p>
@@ -125,6 +137,8 @@ console.log("reduxStore", CourseContent)
         </div>
       </div>
     </div>
+
+   
   );
 }
 
